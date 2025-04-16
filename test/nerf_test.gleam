@@ -1,6 +1,6 @@
+import gleam/bytes_tree
 import gleam/string
-import gleam/string_builder
-import gleam/bit_builder
+import gleam/string_tree
 import gleeunit
 import nerf/websocket.{Binary, Text}
 
@@ -22,8 +22,8 @@ pub fn echo_test() {
   let assert Ok(Text("Hello")) = websocket.receive(conn, 500)
   let assert Ok(Text("World")) = websocket.receive(conn, 500)
 
-  websocket.send_builder(conn, string_builder.from_string("Goodbye"))
-  websocket.send_builder(conn, string_builder.from_string("Universe"))
+  websocket.send_builder(conn, string_tree.from_string("Goodbye"))
+  websocket.send_builder(conn, string_tree.from_string("Universe"))
   let assert Ok(Text("Goodbye")) = websocket.receive(conn, 500)
   let assert Ok(Text("Universe")) = websocket.receive(conn, 500)
 
@@ -32,14 +32,8 @@ pub fn echo_test() {
   let assert Ok(Binary(<<1, 2, 3, 4>>)) = websocket.receive(conn, 500)
   let assert Ok(Binary(<<5, 6, 7, 8>>)) = websocket.receive(conn, 500)
 
-  websocket.send_binary_builder(
-    conn,
-    bit_builder.from_bit_string(<<8, 7, 6, 5>>),
-  )
-  websocket.send_binary_builder(
-    conn,
-    bit_builder.from_bit_string(<<4, 3, 2, 1>>),
-  )
+  websocket.send_binary_builder(conn, bytes_tree.from_bit_array(<<8, 7, 6, 5>>))
+  websocket.send_binary_builder(conn, bytes_tree.from_bit_array(<<4, 3, 2, 1>>))
   let assert Ok(Binary(<<8, 7, 6, 5>>)) = websocket.receive(conn, 500)
   let assert Ok(Binary(<<4, 3, 2, 1>>)) = websocket.receive(conn, 500)
 
